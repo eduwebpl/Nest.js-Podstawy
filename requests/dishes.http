@@ -1,0 +1,24 @@
+### [C]reate dishes
+POST http://localhost:3000/dishes
+Content-Type: application/json
+
+{
+  "name": "My supper Broccoli",
+  "servings": 1
+}
+
+### [R]ead dishes
+GET http://localhost:3000/dishes
+
+### [U]pdate dish
+PUT http://localhost:3000/dishes
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "🌽❄",
+  "servings": 3
+}
+
+### [D]elete dish
+DELETE http://localhost:3000/dishes/1
