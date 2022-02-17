@@ -1,0 +1,28 @@
+### [C]reate products
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "name": "Banana",
+  "unit": "item",
+  "amount": 1,
+  "dishId": 1
+}
+
+### [R]ead products
+GET http://localhost:3000/products
+
+### [U]pdate product
+PUT http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Cherry",
+  "unit": "g",
+  "amount": 3,
+  "dishId": 1
+}
+
+### [D]elete product
+DELETE http://localhost:3000/products/1

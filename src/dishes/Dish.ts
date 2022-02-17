@@ -4,3 +4,6 @@ export interface Dish {
   servings: number;
   description?: string;
 }
+// KISS (Keep It Simple Stupid)
+
+// Dish ->> Product[]

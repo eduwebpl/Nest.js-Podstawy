@@ -29,7 +29,7 @@ export class DishesController {
   @Post()
   createOne(@Body() dish: CreateDishDto) {
     const newDish: Dish = {
-      id: this.trackId,
+      id: this.trackId++,
       ...dish,
     };
     this.dishes.push(newDish);
