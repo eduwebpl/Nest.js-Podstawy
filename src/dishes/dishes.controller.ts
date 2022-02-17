@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -43,7 +46,9 @@ export class DishesController {
     const dishToUpdate = this.dishes.find(
       (d: Dish) => d.id === Number(dish.id),
     );
-    if (dishToUpdate) {
+    if (!dishToUpdate) {
+      throw new NotFoundException('Dish not found');
+    } else {
       Object.assign(dishToUpdate, dish);
     }
     return dishToUpdate;
@@ -51,7 +56,16 @@ export class DishesController {
 
   @Delete(':id')
   deleteOne(@Param('id') dishId: string) {
+    const dishToRemove = this.dishes.find((d: Dish) => d.id === Number(dishId));
+    if (!dishToRemove) {
+      throw new NotFoundException(`Dish id: ${dishId} not found`);
+    }
     this.dishes = this.dishes.filter((d: Dish) => d.id !== Number(dishId));
     return { dishId };
+  }
+
+  @Get('/exception')
+  exampleException() {
+    throw new HttpException('My super sample', HttpStatus.PAYLOAD_TOO_LARGE);
   }
 }
