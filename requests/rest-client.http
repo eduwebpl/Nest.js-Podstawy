@@ -9,3 +9,23 @@ GET localhost:3031/
 
 ### Express.js endpoint /user
 GET localhost:3031/user
+
+
+### Create Frut
+POST localhost:3000/
+Content-Type: application/json
+
+{
+  "name": "Mango"
+}
+
+### Update Fruit
+PUT localhost:3000/
+Content-Type: application/json
+
+{
+  "name": "Cherry"
+}
+
+### Delete Fruit
+DELETE localhost:3000/12
