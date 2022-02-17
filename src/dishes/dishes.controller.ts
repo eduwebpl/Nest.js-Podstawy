@@ -8,6 +8,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { Dish } from './Dish';
+import { CreateDishDto } from './dto/create-dish.dto';
+import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Controller('dishes')
 export class DishesController {
@@ -22,9 +24,12 @@ export class DishesController {
   ];
 
   @Post()
-  createOne(@Body() dish: Dish) {
-    dish.id = this.trackId++;
-    this.dishes.push(dish);
+  createOne(@Body() dish: CreateDishDto) {
+    const newDish: Dish = {
+      id: this.trackId,
+      ...dish,
+    };
+    this.dishes.push(newDish);
     return dish;
   }
 
@@ -34,7 +39,7 @@ export class DishesController {
   }
 
   @Put()
-  updateOne(@Body() dish: Dish) {
+  updateOne(@Body() dish: UpdateDishDto) {
     const dishToUpdate = this.dishes.find(
       (d: Dish) => d.id === Number(dish.id),
     );
