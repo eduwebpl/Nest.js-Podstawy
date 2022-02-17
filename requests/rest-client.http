@@ -1,0 +1,11 @@
+### NestJs endpoint /
+GET localhost:3000/
+
+### NestJs endpoint /user
+GET localhost:3000/user
+
+### Express.js endpoint /
+GET localhost:3031/
+
+### Express.js endpoint /user
+GET localhost:3031/user
