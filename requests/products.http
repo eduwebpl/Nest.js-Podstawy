@@ -3,8 +3,8 @@ POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Banana",
-  "unit": "item",
+  "name": "Salt",
+  "unit": "pinch",
   "amount": 1,
   "dishId": 2
 }

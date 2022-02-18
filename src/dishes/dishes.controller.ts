@@ -16,7 +16,11 @@ import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Controller('dishes')
 export class DishesController {
-  private dishService = new DishService();
+  private dishService: DishService;
+
+  constructor(dishService: DishService) {
+    this.dishService = dishService;
+  }
 
   @Post()
   createOne(@Body() dish: CreateDishDto) {

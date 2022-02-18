@@ -14,8 +14,11 @@ import { ProductService } from './product.service';
 
 @Controller('products')
 export class ProductsController {
-  private productService = new ProductService();
-  // private dishService = new DishService();
+  private productService: ProductService;
+
+  constructor(productService: ProductService) {
+    this.productService = productService;
+  }
 
   @Post()
   createOne(@Body() product: CreateProductDto) {
