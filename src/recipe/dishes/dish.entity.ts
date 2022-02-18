@@ -5,7 +5,7 @@ import {
   BaseEntity,
   OneToMany,
 } from 'typeorm';
-import { Product } from '../products/Product';
+import { Product } from '../products/product.entity';
 
 @Entity()
 export class Dish extends BaseEntity {
