@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  OneToMany,
+} from 'typeorm';
 import { Product } from '../products/Product';
 
 @Entity()
@@ -16,6 +22,7 @@ export class Dish extends BaseEntity {
   description?: string;
 
   // One to Many
+  @OneToMany(() => Product, (product: Product) => product.dish)
   products: Product[];
 }
 // KISS (Keep It Simple Stupid)

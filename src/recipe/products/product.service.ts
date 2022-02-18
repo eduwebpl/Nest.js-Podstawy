@@ -17,9 +17,10 @@ export class ProductService {
     this.dishService = dishService;
   }
 
-  create(product: CreateProductDto): Promise<Product> {
+  async create(product: CreateProductDto): Promise<Product> {
     const newProduct = new Product();
     Object.assign(newProduct, product);
+    newProduct.dish = await this.dishService.getOneById(product.dishId);
     return newProduct.save();
   }
 
