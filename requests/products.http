@@ -6,7 +6,7 @@ Content-Type: application/json
   "name": "Salt",
   "unit": "pinch",
   "amount": 1,
-  "dishId": 1
+  "dishId": 2
 }
 
 ### [R]ead products
