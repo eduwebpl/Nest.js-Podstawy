@@ -11,51 +11,42 @@ import { Product } from './Product';
 
 @Injectable()
 export class ProductService {
-  private trackId = 1;
-  private products: Product[] = [
-    { id: this.trackId++, name: 'Oats', amount: 100, unit: 'g', dishId: 1 },
-  ];
   private dishService: DishService;
 
   constructor(@Inject(forwardRef(() => DishService)) dishService: DishService) {
     this.dishService = dishService;
   }
 
-  create(product: CreateProductDto): Product {
-    const newProduct: Product = {
-      id: this.trackId++,
-      ...product,
-    };
-    this.dishService.getOneById(product.dishId);
-    this.products.push(newProduct);
-    return newProduct;
+  create(product: CreateProductDto): Promise<Product> {
+    const newProduct = new Product();
+    Object.assign(newProduct, product);
+    return newProduct.save();
   }
 
-  read(): readonly Product[] {
-    return this.products;
+  read(): Promise<Product[]> {
+    return Product.find();
   }
 
-  getAllForDishId(dishId: number): Product[] {
-    return this.products.filter((p: Product) => p.dishId === dishId);
-  }
+  // getAllForDishId(dishId: number): Product[] {
+  //   return this.products.filter((p: Product) => p.dishId === dishId);
+  // }
 
-  getOneById(productId: number): Product {
-    const product = this.products.find((p: Product) => p.id === productId);
+  async getOneById(productId: number): Promise<Product> {
+    const product = await Product.findOne({ id: productId });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
     return product;
   }
 
-  update(product: UpdateProductDto): Product {
-    const productToUpdate = this.getOneById(product.id);
+  async update(product: UpdateProductDto): Promise<Product> {
+    const productToUpdate = await this.getOneById(product.id);
     Object.assign(productToUpdate, product);
     return productToUpdate;
   }
 
-  delete(productId: number): { productId: number } {
-    this.getOneById(productId);
-    this.products = this.products.filter((p: Product) => p.id !== productId);
-    return { productId };
+  async delete(productId: number): Promise<Product> {
+    const productToRemove = await this.getOneById(productId);
+    return productToRemove.remove();
   }
 }
