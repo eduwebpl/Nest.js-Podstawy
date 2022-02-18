@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# databse
+/database/my-db.sqlite3
+
 # Logs
 logs
 *.log
