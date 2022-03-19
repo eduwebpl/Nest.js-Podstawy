@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { RecipeModule } from './recipe/recipe.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -10,8 +11,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       type: 'sqlite',
       database: './database/my-db.sqlite3',
       autoLoadEntities: true,
-      synchronize: true, // not for production [!]
+      synchronize: false, // not for production [!]
     }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [],
