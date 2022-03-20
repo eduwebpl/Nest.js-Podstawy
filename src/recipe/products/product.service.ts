@@ -17,7 +17,6 @@ export class ProductService {
     // const newProduct = new Product();
     // Object.assign(newProduct, product);
     const newProduct = this.productRepository.create(product);
-    newProduct.dish = await this.dishService.getOneById(product.dishId);
     return this.productRepository.save(newProduct);
   }
 
