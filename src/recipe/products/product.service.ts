@@ -9,7 +9,6 @@ import { Product } from './product.entity';
 @Injectable()
 export class ProductService {
   constructor(
-    private dishService: DishService,
     @InjectRepository(Product) private productRepository: Repository<Product>,
   ) {}
 

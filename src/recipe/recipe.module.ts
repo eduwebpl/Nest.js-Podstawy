@@ -7,7 +7,7 @@ import { Product } from './products/product.entity';
 import { ProductService } from './products/product.service';
 import { ProductsController } from './products/products.controller';
 import { IngredientsController } from './ingredients/ingredients.controller';
-import { IngredientService } from './ingredients/ingredients.service';
+import { IngredientService } from './ingredients/ingredient.service';
 import { Ingredient } from './ingredients/ingredient.entity';
 
 @Module({

@@ -1,13 +1,13 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
   BaseEntity,
-  OneToMany,
+  Column,
+  Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Product } from '../products/product.entity';
-import { User } from '../../user/user.entity';
 import { Dish } from '../dishes/dish.entity';
 
 @Entity()

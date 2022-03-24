@@ -27,9 +27,6 @@ export class Dish extends BaseEntity {
   @Column({ nullable: true, type: 'text' })
   description?: string;
 
-  @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.product)
-  ingredients: Ingredient[];
-
   @ManyToOne(() => User, (user: User) => user.dishes, {
     onDelete: 'CASCADE',
   })
@@ -37,7 +34,9 @@ export class Dish extends BaseEntity {
 
   @Column({ type: 'boolean', default: false })
   isPublic: number;
-}
-// KISS (Keep It Simple Stupid)
 
-// Dish ->> Product[]
+  @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.dish, {
+    onDelete: 'CASCADE',
+  })
+  ingredients: Ingredient[];
+}

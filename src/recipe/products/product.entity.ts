@@ -20,9 +20,8 @@ export class Product extends BaseEntity {
   @Column({ type: 'varchar' })
   unit: 'kg' | 'g' | 'tsp' | 'sp' | 'pinch' | 'ml' | 'l' | 'item';
 
-  @Column({ type: 'decimal' })
-  amount: number;
-
-  @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.product)
+  @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.product, {
+    onDelete: 'CASCADE',
+  })
   ingredients: Ingredient[];
 }
