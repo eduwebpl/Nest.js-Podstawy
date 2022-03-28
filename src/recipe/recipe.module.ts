@@ -9,9 +9,12 @@ import { ProductsController } from './products/products.controller';
 import { IngredientsController } from './ingredients/ingredients.controller';
 import { IngredientService } from './ingredients/ingredient.service';
 import { Ingredient } from './ingredients/ingredient.entity';
+import { IngredientRepository } from './ingredients/ingredient.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, Dish, Ingredient])],
+  imports: [
+    TypeOrmModule.forFeature([Product, Dish, Ingredient, IngredientRepository]),
+  ],
   controllers: [DishesController, ProductsController, IngredientsController],
   providers: [ProductService, DishService, IngredientService],
 })
