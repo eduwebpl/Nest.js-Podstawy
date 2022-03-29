@@ -13,7 +13,12 @@ import { envValidationSchema } from './config/envValidation.config';
     TypeOrmModule.forRootAsync(databaseConfig),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: [`.env.${process.env.NODE_ENV}`],
+      envFilePath: [
+        `.env`,
+        `.env.local`,
+        `.env.${process.env.NODE_ENV}`,
+        `.env.${process.env.NODE_ENV}.local`,
+      ],
       validationSchema: envValidationSchema,
     }),
     UserModule,
