@@ -32,6 +32,9 @@ export class Dish extends BaseEntity {
   })
   user: User;
 
+  @Column({ type: 'int' })
+  userId: number;
+
   @Column({ type: 'boolean', default: false })
   isPublic: boolean;
 

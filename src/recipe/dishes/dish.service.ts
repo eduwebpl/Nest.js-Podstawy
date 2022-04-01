@@ -4,16 +4,21 @@ import { Repository } from 'typeorm';
 import { Dish } from './dish.entity';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class DishService {
   constructor(
     @InjectRepository(Dish) private dishRepository: Repository<Dish>,
+    private readonly userService: UserService,
   ) {}
 
-  create(dish: CreateDishDto): Promise<Dish> {
-    // const newDish = new Dish();
-    // Object.assign(newDish, dish);
+  async create(dish: CreateDishDto): Promise<Dish> {
+    // TODO: get userId from token
+    const user = await this.userService.getOneById(dish.userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     return this.dishRepository.save(dish);
   }
 
@@ -23,7 +28,7 @@ export class DishService {
 
   async getOneById(id: number): Promise<Dish> {
     const dish = await this.dishRepository.findOne(id, {
-      relations: ['products'],
+      relations: ['user'],
     });
     if (!dish) {
       throw new NotFoundException('Dish not found');

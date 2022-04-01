@@ -1,4 +1,5 @@
 import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { User } from '../../../user/user.entity';
 
 export class UpdateDishDto {
   @IsNumber()
@@ -13,4 +14,7 @@ export class UpdateDishDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsNumber()
+  userId: number;
 }
