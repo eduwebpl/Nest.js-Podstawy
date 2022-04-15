@@ -5,16 +5,18 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Product } from '../recipe/products/product.entity';
-import { Dish } from '../recipe/dishes/dish.entity';
+import { Dish } from '../../recipe/dishes/dish.entity';
 
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar', unique: true })
+  email: string;
+
   @Column({ type: 'varchar' })
-  username: string;
+  password: string;
 
   @OneToMany(() => Dish, (dish: Dish) => dish.user)
   dishes: Dish[];

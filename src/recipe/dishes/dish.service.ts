@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Dish } from './dish.entity';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
-import { UserService } from '../../user/user.service';
+import { UserService } from '../../auth/user/user.service';
 
 @Injectable()
 export class DishService {
