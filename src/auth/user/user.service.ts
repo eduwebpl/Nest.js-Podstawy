@@ -1,14 +1,9 @@
-import {
-  BadRequestException,
-  ConflictException,
-  HttpException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { MetadataAlreadyExistsError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './create-user.dto';
+import bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -30,7 +25,15 @@ export class UserService {
     return user;
   }
 
+  hashPassword(password = '') {
+    console.log(bcrypt.hashSync(password, 8));
+    return bcrypt.hashSync(password, 8);
+  }
+
   async create(user: CreateUserDto): Promise<User> {
-    return this.userRepository.save(user);
+    return this.userRepository.save({
+      email: user.email.toLowerCase(),
+      password: this.hashPassword(user.password),
+    });
   }
 }
