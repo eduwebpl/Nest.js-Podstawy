@@ -27,7 +27,6 @@ export class UserService {
   }
 
   hashPassword(password = '') {
-    console.log(bcrypt.hashSync(password, 8));
     return bcrypt.hashSync(password, 8);
   }
 

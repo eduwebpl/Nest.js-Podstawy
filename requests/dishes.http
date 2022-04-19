@@ -1,6 +1,7 @@
 ### [C]reate dishes
 POST http://localhost:3000/dishes
 Content-Type: application/json
+Authorization
 
 {
   "name": "My supper Broccoli",

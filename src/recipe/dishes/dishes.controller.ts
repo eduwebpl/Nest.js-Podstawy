@@ -9,12 +9,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('dishes')
+@UseGuards(AuthGuard('jwt'))
 export class DishesController {
   private dishService: DishService;
 
@@ -28,7 +32,7 @@ export class DishesController {
   }
 
   @Get()
-  readAll() {
+  readAll(@Req() req) {
     return this.dishService.read();
   }
 
