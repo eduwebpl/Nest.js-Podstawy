@@ -27,6 +27,12 @@ export class CreateUserTable1648725263206 implements MigrationInterface {
             length: '60',
           },
           {
+            name: 'refreshToken',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+          },
+          {
             name: 'createdAt',
             type: 'timestamp',
             default: 'now()',

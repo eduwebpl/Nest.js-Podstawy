@@ -9,4 +9,8 @@ export class UpdateUserDto {
 
   @IsString()
   password: string;
+
+  @IsString()
+  @IsOptional()
+  refreshToken?: string;
 }
