@@ -33,7 +33,7 @@ export class Dish extends BaseEntity {
   user: User;
 
   @Column({ type: 'boolean', default: false })
-  isPublic: number;
+  isPublic: boolean;
 
   @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.dish, {
     onDelete: 'CASCADE',

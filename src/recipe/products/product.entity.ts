@@ -9,6 +9,16 @@ import {
 import { Dish } from '../dishes/dish.entity';
 import { Ingredient } from '../ingredients/ingredient.entity';
 
+export type UnitType =
+  | 'kg'
+  | 'g'
+  | 'tsp'
+  | 'sp'
+  | 'pinch'
+  | 'ml'
+  | 'l'
+  | 'item';
+
 @Entity()
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -18,7 +28,7 @@ export class Product extends BaseEntity {
   name: string;
 
   @Column({ type: 'varchar' })
-  unit: 'kg' | 'g' | 'tsp' | 'sp' | 'pinch' | 'ml' | 'l' | 'item';
+  unit: UnitType;
 
   @OneToMany(() => Ingredient, (ingredient: Ingredient) => ingredient.product, {
     onDelete: 'CASCADE',

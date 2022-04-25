@@ -20,7 +20,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "NODE_ENV=development npx ts-node ./node_modules/typeorm/cli.js migration:run --config src/config/database.config",
-    "migrate:revert": "NODE_ENV=development npx ts-node ./node_modules/typeorm/cli.js migration:revert --config src/config/database.config "
+    "migrate:revert": "NODE_ENV=development npx ts-node ./node_modules/typeorm/cli.js migration:revert --config src/config/database.config ",
+    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
+    "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -37,9 +39,11 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "sqlite3": "^5.0.2",
-    "typeorm": "^0.2.43"
+    "typeorm": "^0.2.43",
+    "typeorm-seeding": "^1.6.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^6.2.0",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
