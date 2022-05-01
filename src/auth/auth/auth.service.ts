@@ -7,7 +7,9 @@ import { UserService } from '../user/user.service';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async register(user: CreateUserDto): Promise<User> {
+  async register(
+    user: Pick<CreateUserDto, 'email' | 'password'>,
+  ): Promise<User> {
     return this.userService.create(user);
   }
 }
