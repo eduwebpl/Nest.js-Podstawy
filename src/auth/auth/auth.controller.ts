@@ -1,9 +1,18 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { LoginUserDto } from '../user/dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,16 +28,36 @@ export class AuthController {
     @Res() res,
   ): Promise<User> {
     const user = await this.authService.register({ email, password });
-    const token = this.jwtService.sign({ user_id: user.id });
+    await this.authService.setAuthToken(res, {
+      user_id: user.id,
+    });
 
-    return res
-      .cookie('access_token', token, {
-        httpOnly: true,
-        domain: this.configService.get('DOMAIN'),
-        expires: new Date(
-          Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
-        ),
-      })
-      .json(user);
+    return res.json({
+      ...user,
+      password: undefined,
+    });
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() { email, password }: LoginUserDto, @Res() res) {
+    const user = await this.authService.login({ email, password });
+    await this.authService.setAuthToken(res, {
+      user_id: user.id,
+    });
+
+    return res.json({
+      ...user,
+      password: undefined,
+    });
+  }
+
+  @Get('logout')
+  async logout(@Res() res) {
+    this.authService.clearAuthTokens(res);
+    // TODO set refresh token as expired
+    return res.json({
+      message: 'Logged out',
+    });
   }
 }

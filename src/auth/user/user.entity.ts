@@ -21,4 +21,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Dish, (dish: Dish) => dish.user)
   dishes: Dish[];
+
+  @Column({ type: 'varchar' })
+  refreshToken: string;
 }

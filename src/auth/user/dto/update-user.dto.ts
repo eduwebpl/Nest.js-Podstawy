@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @IsNumber()
@@ -9,4 +9,8 @@ export class UpdateUserDto {
 
   @IsString()
   password: string;
+
+  @IsString()
+  @IsOptional()
+  refreshToken?: string;
 }
