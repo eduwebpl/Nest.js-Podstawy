@@ -37,55 +37,28 @@ export class AuthService {
 
   generateToken(payload) {
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, {
-      expiresIn: `${this.configService.get<string>(
-        'JWT_EXPIRATION_REFRESH_SECRET',
-      )}s`,
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET_TOKEN'),
-    });
 
-    return [accessToken, refreshToken];
+    return [accessToken];
   }
 
-  async setAuthToken(
-    res,
-    payload,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const [accessToken, refreshToken] = this.generateToken(payload);
+  async setAuthToken(res, payload): Promise<{ accessToken: string }> {
+    const [accessToken] = this.generateToken(payload);
 
-    await this.userService.update(payload.user_id, {
-      refreshToken: bcrypt.hashSync(refreshToken, 8),
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      domain: this.configService.get('DOMAIN'),
+      expires: new Date(
+        Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
+      ),
     });
 
-    res
-      .cookie('access_token', accessToken, {
-        httpOnly: true,
-        domain: this.configService.get('DOMAIN'),
-        expires: new Date(
-          Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
-        ),
-      })
-      .cookie('refresh_token', accessToken, {
-        httpOnly: true,
-        domain: this.configService.get('DOMAIN'),
-        expires: new Date(
-          Date.now() +
-            this.configService.get('JWT_REFRESH_SECRET_TOKEN') * 1000,
-        ),
-      });
-
-    return { accessToken, refreshToken };
+    return { accessToken };
   }
 
   async clearAuthTokens(res) {
-    res
-      .clearCookie('access_token', {
-        domain: this.configService.get('DOMAIN'),
-        httpOnly: true,
-      })
-      .clearCookie('refresh_token', {
-        domain: this.configService.get('DOMAIN'),
-        httpOnly: true,
-      });
+    res.clearCookie('access_token', {
+      domain: this.configService.get('DOMAIN'),
+      httpOnly: true,
+    });
   }
 }
