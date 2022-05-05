@@ -71,10 +71,10 @@ export class AuthController {
 
   @Get('logout')
   @UseGuards(JwtAuthGuard)
-  async logout(@Req() req, @Res() res: Response) {
+  async logout(@Req() req, @Res({ passthrough: true }) res) {
     await this.authService.clearAuthTokens(res, req.user.id);
-    return res.json({
+    return {
       message: 'Logged out',
-    });
+    };
   }
 }
