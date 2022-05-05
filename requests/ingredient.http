@@ -1,0 +1,9 @@
+### [C]reate dishes
+POST http://localhost:3000/ingredients
+Content-Type: application/json
+
+{
+  "amount": 25,
+  "dishId": 27,
+  "productId": 1
+}

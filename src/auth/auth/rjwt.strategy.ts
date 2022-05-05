@@ -5,7 +5,10 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class RefreshJwtStrategy extends PassportStrategy(
+  Strategy,
+  'refresh-jwt',
+) {
   constructor(
     private readonly authService: AuthService,
     configService: ConfigService,
@@ -13,11 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req) => {
-          return req?.cookies?.['access_token'];
+          return req?.cookies?.['refresh_token'];
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_SECRET_TOKEN'),
+      secretOrKey: configService.get('JWT_REFRESH_SECRET_TOKEN'),
     });
   }
 
