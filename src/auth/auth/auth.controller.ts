@@ -25,31 +25,28 @@ export class AuthController {
   @Post('register')
   async register(
     @Body() { email, password }: CreateUserDto,
-    @Res() res,
+    @Res({ passthrough: true }) res,
   ): Promise<User> {
     const user = await this.authService.register({ email, password });
     await this.authService.setAuthToken(res, {
       user_id: user.id,
     });
 
-    return res.json({
-      ...user,
-      password: undefined,
-    });
+    return user;
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() { email, password }: LoginUserDto, @Res() res) {
+  async login(
+    @Body() { email, password }: LoginUserDto,
+    @Res({ passthrough: true }) res,
+  ) {
     const user = await this.authService.login({ email, password });
     await this.authService.setAuthToken(res, {
       user_id: user.id,
     });
 
-    return res.json({
-      ...user,
-      password: undefined,
-    });
+    return user;
   }
 
   @Get('logout')
