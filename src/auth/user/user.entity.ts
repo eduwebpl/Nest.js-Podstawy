@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Dish } from '../../recipe/dishes/dish.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
@@ -15,12 +16,14 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', unique: true })
   email: string;
 
+  @Exclude()
   @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ type: 'varchar' })
-  refreshToken: string;
-
   @OneToMany(() => Dish, (dish: Dish) => dish.user)
   dishes: Dish[];
+
+  @Exclude()
+  @Column({ type: 'varchar' })
+  refreshToken: string;
 }

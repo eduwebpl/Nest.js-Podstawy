@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -35,6 +39,10 @@ export class AuthService {
     return user;
   }
 
+  async validateUser(userId): Promise<User> {
+    return this.userService.findOneBy({ id: userId });
+  }
+
   generateToken(payload) {
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
@@ -45,6 +53,16 @@ export class AuthService {
     });
 
     return [accessToken, refreshToken];
+  }
+
+  async tokenIsActive(token: string, hash: string): Promise<boolean> {
+    const tokenIsActive = await bcrypt.compare(token, hash || '');
+
+    if (!tokenIsActive) {
+      throw new ForbiddenException();
+    }
+
+    return true;
   }
 
   async setAuthToken(
@@ -66,19 +84,24 @@ export class AuthService {
           Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
         ),
       })
-      .cookie('refresh_token', accessToken, {
+      .cookie('refresh_token', refreshToken, {
         httpOnly: true,
         domain: this.configService.get('DOMAIN'),
         expires: new Date(
           Date.now() +
-            this.configService.get('JWT_REFRESH_SECRET_TOKEN') * 1000,
+            this.configService.get('JWT_EXPIRATION_REFRESH_SECRET') * 1000,
         ),
       });
 
     return { accessToken, refreshToken };
   }
 
-  async clearAuthTokens(res) {
+  async clearAuthTokens(res, user_id) {
+    await this.userService.update({
+      id: user_id,
+      refreshToken: null,
+    });
+
     res
       .clearCookie('access_token', {
         domain: this.configService.get('DOMAIN'),

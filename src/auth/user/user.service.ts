@@ -34,7 +34,7 @@ export class UserService {
     return bcrypt.hashSync(password, 8);
   }
 
-  async create(user: CreateUserDto): Promise<User> {
+  async create(user: Pick<CreateUserDto, 'email' | 'password'>): Promise<User> {
     return this.userRepository.save({
       email: user.email.toLowerCase(),
       password: this.hashPassword(user.password),

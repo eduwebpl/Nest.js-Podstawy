@@ -14,9 +14,13 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "adam@eduweb.pl",
+  "email": "adam2@eduweb.pl",
   "password": "1234"
 }
+
+### Refresh
+POST http://localhost:3000/auth/refresh
+Content-Type: application/json
 
 ### Logout
 GET http://localhost:3000/auth/logout
