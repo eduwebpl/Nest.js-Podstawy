@@ -54,7 +54,7 @@ export class AuthController {
 
   @Get('logout')
   async logout(@Res() res) {
-    this.authService.clearAuthTokens(res);
+    await this.authService.clearAuthTokens(res);
     // TODO set refresh token as expired
     return res.json({
       message: 'Logged out',
