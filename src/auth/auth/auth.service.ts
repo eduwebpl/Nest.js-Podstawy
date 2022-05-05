@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { CreateUserDto } from '../user/create-user.dto';
+import { LoginUserDto } from '../user/dto/login-user.dto';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -9,38 +12,81 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  generateAccessToken(user_id) {
-    return jwt.sign({ id: user_id }, this.configService.get('JWT_SECRET'), {
-      expiresIn: 86400,
+  async register(
+    user: Pick<CreateUserDto, 'email' | 'password'>,
+  ): Promise<User> {
+    return this.userService.create(user);
+  }
+
+  async login({ email, password }: LoginUserDto): Promise<User> {
+    const user = await this.userService.findOneBy({ email });
+    if (!user) {
+      throw new BadRequestException(`User does not exist.`);
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      throw new BadRequestException(`Wrong password.`);
+    }
+
+    return user;
+  }
+
+  generateToken(payload) {
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: `${this.configService.get<string>(
+        'JWT_EXPIRATION_REFRESH_SECRET',
+      )}s`,
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET_TOKEN'),
     });
+
+    return [accessToken, refreshToken];
   }
 
-  async generateRefreshToken(user_id) {
-    const refreshToken = jwt.sign(
-      { id: user_id },
-      this.configService.get('JWT_REFRESH_SECRET'),
-    );
+  async setAuthToken(
+    res,
+    payload,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const [accessToken, refreshToken] = this.generateToken(payload);
 
-    await this.userService.update({ id: user_id, refreshToken });
+    await this.userService.update({
+      id: payload.user_id,
+      refreshToken: bcrypt.hashSync(refreshToken, 8),
+    });
 
-    return refreshToken;
+    res
+      .cookie('access_token', accessToken, {
+        httpOnly: true,
+        domain: this.configService.get('DOMAIN'),
+        expires: new Date(
+          Date.now() + this.configService.get('JWT_EXPIRATION_SECRET') * 1000,
+        ),
+      })
+      .cookie('refresh_token', accessToken, {
+        httpOnly: true,
+        domain: this.configService.get('DOMAIN'),
+        expires: new Date(
+          Date.now() +
+            this.configService.get('JWT_REFRESH_SECRET_TOKEN') * 1000,
+        ),
+      });
+
+    return { accessToken, refreshToken };
   }
 
-  async register({ email, password }: CreateUserDto): Promise<{
-    id: number;
-    accessToken: string;
-    refreshToken: string;
-  }> {
-    const user = await this.userService.create({ email, password });
-    const accessToken = this.generateAccessToken(user.id);
-    const refreshToken = await this.generateRefreshToken(user.id);
-
-    return {
-      id: user.id,
-      accessToken,
-      refreshToken,
-    };
+  async clearAuthTokens(res) {
+    res
+      .clearCookie('access_token', {
+        domain: this.configService.get('DOMAIN'),
+        httpOnly: true,
+      })
+      .clearCookie('refresh_token', {
+        domain: this.configService.get('DOMAIN'),
+        httpOnly: true,
+      });
   }
 }
