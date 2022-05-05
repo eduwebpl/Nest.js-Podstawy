@@ -27,6 +27,7 @@ export class CreateDishTable1650537347030 implements MigrationInterface {
             name: 'slug',
             type: 'varchar',
             length: '255',
+            isUnique: true,
           },
           {
             name: 'servings',
@@ -35,6 +36,7 @@ export class CreateDishTable1650537347030 implements MigrationInterface {
           {
             name: 'description',
             type: 'text',
+            isNullable: true,
           },
           {
             name: 'isPublic',

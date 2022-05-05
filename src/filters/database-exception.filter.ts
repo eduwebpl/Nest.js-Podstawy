@@ -20,8 +20,12 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
     }
 
     response.status(statusCode).json({
-      statusCode,
-      message,
+      message: exception.message,
+      stack: exception.stack,
     });
+    // response.status(statusCode).json({
+    //   statusCode,
+    //   message,
+    // });
   }
 }

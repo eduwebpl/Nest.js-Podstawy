@@ -10,10 +10,13 @@ import { IngredientsController } from './ingredients/ingredients.controller';
 import { IngredientService } from './ingredients/ingredient.service';
 import { Ingredient } from './ingredients/ingredient.entity';
 import { IngredientRepository } from './ingredients/ingredient.repository';
+import { UserService } from '../auth/user/user.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Product, Dish, Ingredient, IngredientRepository]),
+    AuthModule,
   ],
   controllers: [DishesController, ProductsController, IngredientsController],
   providers: [ProductService, DishService, IngredientService],
