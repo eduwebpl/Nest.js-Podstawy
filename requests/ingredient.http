@@ -4,6 +4,6 @@ Content-Type: application/json
 
 {
   "amount": 25,
-  "dishId": 27,
+  "dishId": 20,
   "productId": 1
 }

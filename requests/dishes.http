@@ -5,8 +5,7 @@ Authorization
 
 {
   "name": "My supper Broccoli",
-  "slug": "my-supper-broccoli",
-  "userId": 123555,
+  "description": "...",
   "servings": 1
 }
 

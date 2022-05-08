@@ -16,6 +16,7 @@ import { DishService } from './dish.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
 
 @Controller('dishes')
 @UseGuards(AuthGuard('jwt'))
@@ -27,8 +28,9 @@ export class DishesController {
   }
 
   @Post()
-  createOne(@Body() dish: CreateDishDto) {
-    return this.dishService.create(dish);
+  @UseGuards(JwtAuthGuard)
+  createOne(@Req() req, @Body() dish: CreateDishDto) {
+    return this.dishService.create(req.user.id, dish);
   }
 
   @Get()

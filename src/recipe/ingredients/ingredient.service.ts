@@ -21,16 +21,12 @@ export class IngredientService {
     return ingredient;
   }
 
-  async create(ingredient: CreateIngredientDto): Promise<Ingredient> {
-    // TODO: get userId from token
-    const dish = await this.dishService.getOneById(ingredient.dishId);
-    if (!dish) {
-      throw new NotFoundException('Dish not found');
-    }
+  async create(
+    userId: number,
+    ingredient: CreateIngredientDto,
+  ): Promise<Ingredient> {
+    const dish = await this.dishService.getOneOf(userId, ingredient.dishId);
     const product = await this.productService.getOneById(ingredient.productId);
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-    return this.ingredientRepository.save(ingredient);
+    return this.ingredientRepository.save({ ...ingredient, dish, product });
   }
 }

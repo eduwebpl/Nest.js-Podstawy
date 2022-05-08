@@ -29,6 +29,7 @@ export class CreateDishTable1648725283456 implements MigrationInterface {
             name: 'slug',
             type: 'varchar',
             length: '255',
+            isUnique: true,
           },
           {
             name: 'servings',

@@ -5,6 +5,7 @@ import { Dish } from './dish.entity';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { UserService } from '../../auth/user/user.service';
+import slugify from 'slugify';
 
 @Injectable()
 export class DishService {
@@ -13,13 +14,14 @@ export class DishService {
     private readonly userService: UserService,
   ) {}
 
-  async create(dish: CreateDishDto): Promise<Dish> {
-    // TODO: get userId from token
-    const user = await this.userService.getOneById(dish.userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return this.dishRepository.save(dish);
+  async create(userId: number, dish: CreateDishDto): Promise<Dish> {
+    const user = await this.userService.getOneById(userId);
+    const slug = await this.generateSlug(dish.name);
+    return this.dishRepository.save({
+      ...dish,
+      slug,
+      user,
+    });
   }
 
   read(): Promise<Dish[]> {
@@ -36,6 +38,17 @@ export class DishService {
     return dish;
   }
 
+  async getOneOf(userId: number, id: number): Promise<Dish> {
+    const dish = await this.dishRepository.findOne({
+      id,
+      userId,
+    });
+    if (!dish) {
+      throw new NotFoundException('Dish not found');
+    }
+    return dish;
+  }
+
   async update(dish: UpdateDishDto) {
     await this.getOneById(dish.id);
     return this.dishRepository.update(dish.id, dish);
@@ -44,5 +57,27 @@ export class DishService {
   async delete(dishId: number): Promise<Dish> {
     const dishToRemove = await this.getOneById(dishId);
     return this.dishRepository.remove(dishToRemove);
+  }
+
+  async generateSlug(name: string) {
+    let slug = slugify(name, {
+      replacement: '-',
+      lower: true,
+    });
+    const exists = await this.findSlugs(slug);
+
+    if (!exists || exists.length === 0) {
+      return slug;
+    }
+
+    slug = slug + '-' + exists.length;
+    return slug;
+  }
+
+  private async findSlugs(slug: string): Promise<Dish[]> {
+    return await this.dishRepository
+      .createQueryBuilder('dish')
+      .where('slug LIKE :slug', { slug: `${slug}%` })
+      .getMany();
   }
 }

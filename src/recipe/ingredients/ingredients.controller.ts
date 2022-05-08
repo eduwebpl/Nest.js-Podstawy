@@ -5,9 +5,12 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
+import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
 
 @Controller('ingredients')
 export class IngredientsController {
@@ -19,7 +22,8 @@ export class IngredientsController {
   }
 
   @Post()
-  createOne(@Body() ingredient: CreateIngredientDto) {
-    return this.ingredientService.create(ingredient);
+  @UseGuards(JwtAuthGuard)
+  createOne(@Req() req, @Body() ingredient: CreateIngredientDto) {
+    return this.ingredientService.create(req.user.id, ingredient);
   }
 }
