@@ -24,15 +24,19 @@ export class DishService {
     });
   }
 
-  read(): Promise<Dish[]> {
-    return this.dishRepository.find();
+  read(limit: number, offset: number): Promise<Dish[]> {
+    return this.dishRepository.find({
+      where: { isPublic: true },
+      take: limit,
+      skip: offset,
+    });
   }
 
-  async getOneById(id: number): Promise<Dish> {
+  async getOneById(id: number, userId: number): Promise<Dish> {
     const dish = await this.dishRepository.findOne(id, {
       relations: ['user'],
     });
-    if (!dish) {
+    if (!dish || (dish.isPublic === false && dish.user.id !== userId)) {
       throw new NotFoundException('Dish not found');
     }
     return dish;
@@ -49,13 +53,13 @@ export class DishService {
     return dish;
   }
 
-  async update(dish: UpdateDishDto) {
-    await this.getOneById(dish.id);
+  async update(dish: UpdateDishDto, userId: number) {
+    await this.getOneById(dish.id, userId);
     return this.dishRepository.update(dish.id, dish);
   }
 
-  async delete(dishId: number): Promise<Dish> {
-    const dishToRemove = await this.getOneById(dishId);
+  async delete(dishId: number, userId: number): Promise<Dish> {
+    const dishToRemove = await this.getOneById(dishId, userId);
     return this.dishRepository.remove(dishToRemove);
   }
 

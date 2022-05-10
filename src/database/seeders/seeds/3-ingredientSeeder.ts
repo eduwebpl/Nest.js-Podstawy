@@ -1,8 +1,8 @@
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
-import { Dish } from '../../recipe/dishes/dish.entity';
-import { Product } from '../../recipe/products/product.entity';
-import { Ingredient } from '../../recipe/ingredients/ingredient.entity';
+import { Dish } from '../../../recipe/dishes/dish.entity';
+import { Product } from '../../../recipe/products/product.entity';
+import { Ingredient } from '../../../recipe/ingredients/ingredient.entity';
 import { initializeSeeds } from '../initailizeSeeds';
 
 initializeSeeds();

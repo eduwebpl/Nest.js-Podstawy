@@ -3,7 +3,12 @@ POST http://localhost:3000/ingredients
 Content-Type: application/json
 
 {
-  "amount": 1,
-  "dishId": 1,
+  "amount": 25,
+  "dishId": 20,
   "productId": 1
 }
+
+### [R]ead one ingredient
+GET http://localhost:3000/ingredients/1
+
+

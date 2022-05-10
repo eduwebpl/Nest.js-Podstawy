@@ -1,6 +1,6 @@
 import { define } from 'typeorm-seeding';
 
-import { Ingredient } from '../../recipe/ingredients/ingredient.entity';
+import { Ingredient } from '../../../recipe/ingredients/ingredient.entity';
 
 define(Ingredient, () => {
   const ingredient = new Ingredient();

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IngredientRepository } from './ingredient.repository';
 import { Ingredient } from './ingredient.entity';
 import { DishService } from '../dishes/dish.service';
@@ -13,11 +17,35 @@ export class IngredientService {
     private readonly productService: ProductService,
   ) {}
 
-  async findOne(id: number): Promise<Ingredient> {
-    const ingredient = await this.ingredientRepository.findById(id);
+  async findOne(id: number, userId: number): Promise<Ingredient> {
+    const ingredient = await this.ingredientRepository.findOne(id, {
+      relations: ['dish', 'product'],
+    });
     if (!ingredient) {
       throw new NotFoundException(`Ingredient with id ${id} not found`);
     }
+
+    if (!ingredient.dish.isPublic && ingredient.dish.userId !== userId) {
+      throw new ForbiddenException(`You have no access to this resource.`);
+    }
+
+    return ingredient;
+  }
+
+  async findBy(condition: unknown, userId: number): Promise<Ingredient> {
+    const ingredient = await this.ingredientRepository.findOne({
+      where: condition,
+      relations: ['dish', 'product'],
+    });
+
+    if (!ingredient) {
+      throw new NotFoundException(`Ingredient not found`);
+    }
+
+    if (!ingredient.dish.isPublic && ingredient.dish.userId !== userId) {
+      throw new ForbiddenException(`You have no access to this resource.`);
+    }
+
     return ingredient;
   }
 

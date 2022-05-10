@@ -19,8 +19,11 @@ export class ProductService {
     return this.productRepository.save(newProduct);
   }
 
-  read(): Promise<Product[]> {
-    return this.productRepository.find();
+  read(limit: number, offset: number): Promise<Product[]> {
+    return this.productRepository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 
   // getAllForDishId(dishId: number): Product[] {

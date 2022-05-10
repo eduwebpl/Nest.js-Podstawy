@@ -10,6 +10,9 @@ Content-Type: application/json
 ### [R]ead products
 GET http://localhost:3000/products
 
+### [R]ead product
+GET http://localhost:3000/products/1
+
 ### [U]pdate product
 PUT http://localhost:3000/products
 Content-Type: application/json

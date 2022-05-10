@@ -17,8 +17,9 @@ export class IngredientsController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Get(':id')
-  async findOne(@Param('id', new ParseIntPipe()) id: number) {
-    return this.ingredientService.findOne(id);
+  @UseGuards(JwtAuthGuard)
+  async findOne(@Req() req, @Param('id', new ParseIntPipe()) id: number) {
+    return this.ingredientService.findOne(id, req.user.id);
   }
 
   @Post()
