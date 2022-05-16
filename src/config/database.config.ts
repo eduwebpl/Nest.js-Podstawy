@@ -25,8 +25,8 @@ export class TypeOrmConfig {
       synchronize: false,
       migrationsRun: false,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      migrations: ['dist/migrations/**/*{.ts,.js}'],
-      cli: { migrationsDir: 'src/migrations' },
+      migrations: ['dist/database/migrations/**/*{.ts,.js}'],
+      cli: { migrationsDir: 'src/database/migrations' },
     };
   }
 }

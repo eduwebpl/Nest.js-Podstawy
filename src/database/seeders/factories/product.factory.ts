@@ -1,7 +1,7 @@
 import { Faker } from '@faker-js/faker';
 import { define } from 'typeorm-seeding';
 
-import { Product } from '../../recipe/products/product.entity';
+import { Product } from '../../../recipe/products/product.entity';
 
 type Unit = 'kg' | 'g' | 'tsp' | 'sp' | 'pinch' | 'ml' | 'l' | 'item';
 const units: Unit[] = ['kg', 'g', 'tsp', 'sp', 'pinch', 'ml', 'l', 'item'];
