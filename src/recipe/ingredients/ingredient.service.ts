@@ -13,9 +13,14 @@ export class IngredientService {
     private readonly productService: ProductService,
   ) {}
 
-  async findOne(id: number): Promise<Ingredient> {
-    const ingredient = await this.ingredientRepository.findById(id);
-    if (!ingredient) {
+  async findOne(userId: number, id: number): Promise<Ingredient> {
+    const ingredient = await this.ingredientRepository.findOne(id, {
+      relations: ['dish', 'product'],
+    });
+    if (
+      !ingredient ||
+      (ingredient.dish.userId !== userId && !ingredient.dish.isPublic)
+    ) {
       throw new NotFoundException(`Ingredient with id ${id} not found`);
     }
     return ingredient;
@@ -25,7 +30,10 @@ export class IngredientService {
     userId: number,
     ingredient: CreateIngredientDto,
   ): Promise<Ingredient> {
-    const dish = await this.dishService.getOneOf(userId, ingredient.dishId);
+    const dish = await this.dishService.getOneById(userId, ingredient.dishId);
+    if (!dish) {
+      throw new NotFoundException('Dish not found');
+    }
     const product = await this.productService.getOneById(ingredient.productId);
     return this.ingredientRepository.save({ ...ingredient, dish, product });
   }

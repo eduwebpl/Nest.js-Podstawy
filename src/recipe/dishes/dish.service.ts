@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Dish } from './dish.entity';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { UserService } from '../../auth/user/user.service';
 import slugify from 'slugify';
+import { FilterQueryDto } from '../../common/dto/filter-query.dto';
 
 @Injectable()
 export class DishService {
@@ -24,13 +25,43 @@ export class DishService {
     });
   }
 
-  read(): Promise<Dish[]> {
-    return this.dishRepository.find();
+  async read(
+    userId: number,
+    filters: FilterQueryDto<Dish>,
+  ): Promise<{ result: Dish[]; total: number }> {
+    const [result, total] = await this.dishRepository.findAndCount({
+      take: filters.limit,
+      skip: filters.offset,
+      order: { [filters.orderBy]: filters.order },
+      join: {
+        alias: 'dish',
+        leftJoinAndSelect: {
+          ingredients: 'dish.ingredients',
+          product: 'ingredients.product',
+        },
+      },
+      where: [
+        {
+          name: Like('%' + filters.query + '%'),
+          isPublic: true,
+        },
+        {
+          name: Like('%' + filters.query + '%'),
+          userId: userId,
+        },
+      ],
+    });
+
+    return {
+      result,
+      total,
+    };
   }
 
-  async getOneById(id: number): Promise<Dish> {
+  async getOneById(userId: number, id: number): Promise<Dish> {
     const dish = await this.dishRepository.findOne(id, {
-      relations: ['user'],
+      relations: ['user', 'ingredients', 'ingredients.product'],
+      where: [{ userId }, { isPublic: true }],
     });
     if (!dish) {
       throw new NotFoundException('Dish not found');
@@ -38,24 +69,13 @@ export class DishService {
     return dish;
   }
 
-  async getOneOf(userId: number, id: number): Promise<Dish> {
-    const dish = await this.dishRepository.findOne({
-      id,
-      userId,
-    });
-    if (!dish) {
-      throw new NotFoundException('Dish not found');
-    }
-    return dish;
+  async update(userId: number, dish: UpdateDishDto) {
+    const { id } = await this.getOneById(userId, dish.id);
+    return this.dishRepository.update(id, dish);
   }
 
-  async update(dish: UpdateDishDto) {
-    await this.getOneById(dish.id);
-    return this.dishRepository.update(dish.id, dish);
-  }
-
-  async delete(dishId: number): Promise<Dish> {
-    const dishToRemove = await this.getOneById(dishId);
+  async delete(userId, dishId: number): Promise<Dish> {
+    const dishToRemove = await this.getOneById(userId, dishId);
     return this.dishRepository.remove(dishToRemove);
   }
 

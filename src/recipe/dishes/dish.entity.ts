@@ -42,4 +42,10 @@ export class Dish extends BaseEntity {
     onDelete: 'CASCADE',
   })
   ingredients: Ingredient[];
+
+  @Column({ type: 'varchar' })
+  createdAt: string;
+
+  @Column({ type: 'varchar' })
+  updatedAt: string;
 }

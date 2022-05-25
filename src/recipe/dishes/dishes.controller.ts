@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,15 +12,19 @@ import {
   Put,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
+import { FilterQueryDto } from '../../common/dto/filter-query.dto';
+import { Dish } from './dish.entity';
+import { FilterBy } from '../../common/decorators/filter-by.decorator';
 
 @Controller('dishes')
 @UseGuards(AuthGuard('jwt'))
+@UseInterceptors(ClassSerializerInterceptor)
 export class DishesController {
   private dishService: DishService;
 
@@ -28,33 +33,27 @@ export class DishesController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   createOne(@Req() req, @Body() dish: CreateDishDto) {
     return this.dishService.create(req.user.id, dish);
   }
 
   @Get()
-  readAll(@Req() req) {
-    return this.dishService.read();
+  readAll(@Req() req, @FilterBy<Dish>() filters: FilterQueryDto<Dish>) {
+    return this.dishService.read(req.user.id, filters);
   }
 
   @Get(':id')
-  readOne(@Param('id', ParseIntPipe) dishId: number) {
-    return this.dishService.getOneById(dishId);
+  readOne(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
+    return this.dishService.getOneById(req.user.id, dishId);
   }
 
   @Put()
-  updateOne(@Body() dish: UpdateDishDto) {
-    return this.dishService.update(dish);
+  updateOne(@Req() req, @Body() dish: UpdateDishDto) {
+    return this.dishService.update(req.user.id, dish);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id', ParseIntPipe) dishId: number) {
-    return this.dishService.delete(dishId);
-  }
-
-  @Get('/exception')
-  exampleException() {
-    throw new HttpException('My super sample', HttpStatus.PAYLOAD_TOO_LARGE);
+  deleteOne(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
+    return this.dishService.delete(req.user.id, dishId);
   }
 }

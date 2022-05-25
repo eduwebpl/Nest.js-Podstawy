@@ -15,7 +15,6 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/user.entity';
 import { LoginUserDto } from '../user/dto/login-user.dto';
-import { Response } from 'express';
 import { RefreshAuthGuard } from './refresh.guard';
 import { JwtAuthGuard } from './jwt.guard';
 

@@ -1,4 +1,4 @@
-### [C]reate dishes
+### [C]reate ingredient
 POST http://localhost:3000/ingredients
 Content-Type: application/json
 
@@ -7,3 +7,6 @@ Content-Type: application/json
   "dishId": 20,
   "productId": 1
 }
+
+### [R]ead ingredient
+GET http://localhost:3000/ingredients/6

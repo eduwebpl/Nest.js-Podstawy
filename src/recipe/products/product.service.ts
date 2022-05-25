@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { DishService } from '../dishes/dish.service';
+import { Like, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
+import { FilterQueryDto } from '../../common/dto/filter-query.dto';
 
 @Injectable()
 export class ProductService {
@@ -13,19 +13,25 @@ export class ProductService {
   ) {}
 
   async create(product: CreateProductDto): Promise<Product> {
-    // const newProduct = new Product();
-    // Object.assign(newProduct, product);
     const newProduct = this.productRepository.create(product);
     return this.productRepository.save(newProduct);
   }
 
-  read(): Promise<Product[]> {
-    return this.productRepository.find();
-  }
+  async read(
+    filters: FilterQueryDto<Product>,
+  ): Promise<{ result: Product[]; total: number }> {
+    const [result, total] = await this.productRepository.findAndCount({
+      take: filters.limit,
+      skip: filters.offset,
+      order: { [filters.orderBy]: filters.order },
+      where: [{ name: Like('%' + filters.query + '%') }],
+    });
 
-  // getAllForDishId(dishId: number): Product[] {
-  //   return this.products.filter((p: Product) => p.dishId === dishId);
-  // }
+    return {
+      result,
+      total,
+    };
+  }
 
   async getOneById(productId: number): Promise<Product> {
     const product = await this.productRepository.findOne(productId);
