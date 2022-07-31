@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
-import { Dish } from './dish.entity';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { UserService } from '../../auth/user/user.service';
-import slugify from 'slugify';
 import { FilterQueryDto } from '../../common/dto/filter-query.dto';
+import { Dish } from './dish.entity';
+import slugify from 'slugify';
 
 @Injectable()
 export class DishService {
@@ -18,6 +18,7 @@ export class DishService {
   async create(userId: number, dish: CreateDishDto): Promise<Dish> {
     const user = await this.userService.getOneById(userId);
     const slug = await this.generateSlug(dish.name);
+
     return this.dishRepository.save({
       ...dish,
       slug,

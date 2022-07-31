@@ -1,7 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
-  TypeOrmModuleAsyncOptions,
-  TypeOrmModuleOptions,
+  TypeOrmModuleAsyncOptions, TypeOrmModuleOptions
 } from '@nestjs/typeorm';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
@@ -14,7 +13,7 @@ if (result.error) {
 }
 
 export class TypeOrmConfig {
-  static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
+  static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions  {
     return {
       type: 'postgres',
       database: configService.get('DB_NAME'),
