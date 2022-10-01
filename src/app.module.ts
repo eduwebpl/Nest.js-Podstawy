@@ -6,9 +6,15 @@ import { ConfigModule } from '@nestjs/config';
 import { databaseConfig } from './config/database.config';
 import { envValidationSchema } from './config/envValidation.config';
 import { AuthModule } from './auth/auth.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
     RecipeModule,
     TypeOrmModule.forRootAsync(databaseConfig),
     ConfigModule.forRoot({
@@ -24,6 +30,11 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
