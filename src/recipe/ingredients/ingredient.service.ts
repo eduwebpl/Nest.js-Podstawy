@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IngredientRepository } from './ingredient.repository';
 import { Ingredient } from './ingredient.entity';
 import { DishService } from '../dishes/dish.service';
 import { ProductService } from '../products/product.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
+import { UpdateIngredientDto } from './dto/update-ingredient.dto';
 
 @Injectable()
 export class IngredientService {
@@ -36,5 +41,31 @@ export class IngredientService {
     }
     const product = await this.productService.getOneById(ingredient.productId);
     return this.ingredientRepository.save({ ...ingredient, dish, product });
+  }
+
+  async update(
+    userId: number,
+    id: number,
+    ingredient: UpdateIngredientDto,
+  ): Promise<Ingredient> {
+    const ingredientToUpdate = await this.findOne(userId, id);
+
+    if (!ingredientToUpdate) {
+      throw new NotFoundException(`Ingredient with id ${id} not found`);
+    }
+
+    if (ingredientToUpdate.dish.userId !== userId) {
+      throw new ForbiddenException(
+        'You are not allowed to update this ingredient',
+      );
+    }
+
+    console.log(typeof ingredient.amount);
+
+    await this.ingredientRepository.update(id, {
+      ...ingredient,
+    });
+
+    return this.findOne(userId, id);
   }
 }

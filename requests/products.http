@@ -4,6 +4,7 @@ Content-Type: application/json
 
 {
   "name": "Pepper",
+  "unit": "kg",
   "amount": 1
 }
 

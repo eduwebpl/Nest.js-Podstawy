@@ -22,7 +22,7 @@ export class CreateIngredientTable1648725294213 implements MigrationInterface {
           },
           {
             name: 'amount',
-            type: 'varchar',
+            type: 'int',
             length: '255',
           },
           {

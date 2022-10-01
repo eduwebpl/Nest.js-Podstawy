@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { CreateDishDto } from './dto/create-dish.dto';
@@ -70,9 +74,25 @@ export class DishService {
     return dish;
   }
 
-  async update(userId: number, dish: UpdateDishDto) {
-    const { id } = await this.getOneById(userId, dish.id);
-    return this.dishRepository.update(id, dish);
+  async update(
+    userId: number,
+    dishId: number,
+    data: UpdateDishDto,
+  ): Promise<Dish> {
+    const dish = await this.getOneById(userId, dishId);
+    if (!dish.id) {
+      throw new NotFoundException('Dish not found');
+    }
+    if (dish.userId !== userId) {
+      throw new ForbiddenException('You cannot edit this dish');
+    }
+
+    await this.dishRepository.save({
+      id: dish.id,
+      ...data,
+    });
+
+    return this.getOneById(userId, dishId);
   }
 
   async delete(userId, dishId: number): Promise<Dish> {

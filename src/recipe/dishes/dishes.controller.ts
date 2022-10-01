@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Req,
@@ -45,9 +46,13 @@ export class DishesController {
     return this.dishService.getOneById(req.user.id, dishId);
   }
 
-  @Put()
-  updateOne(@Req() req, @Body() dish: UpdateDishDto) {
-    return this.dishService.update(req.user.id, dish);
+  @Patch(':id')
+  updateOne(
+    @Req() req,
+    @Param('id', ParseIntPipe) dishId,
+    @Body() dish: UpdateDishDto,
+  ) {
+    return this.dishService.update(req.user.id, dishId, dish);
   }
 
   @Delete(':id')

@@ -1,15 +1,15 @@
-import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateIngredientDto {
   @IsNumber()
-  id: number;
-
-  @IsNumber({}, { message: 'Amount must be a number' })
-  amount: number;
+  @IsOptional()
+  amount?: number;
 
   @IsNumber()
-  productId: number;
+  @IsOptional()
+  productId?: number;
 
   @IsNumber()
-  dishId: number;
+  @IsOptional()
+  dishId?: number;
 }

@@ -1,6 +1,12 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { UpdateIngredientDto } from './update-ingredient.dto';
+import { IsNumber } from 'class-validator';
 
-export class CreateIngredientDto extends OmitType(UpdateIngredientDto, [
-  'id',
-] as const) {}
+export class CreateIngredientDto {
+  @IsNumber()
+  amount: number;
+
+  @IsNumber()
+  productId: number;
+
+  @IsNumber()
+  dishId: number;
+}

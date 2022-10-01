@@ -4,7 +4,7 @@ Content-Type: application/json
 Authorization
 
 {
-  "name": "My supper Broccoli",
+  "name": "1My supper Broccoli",
   "description": "...",
   "servings": 1
 }
@@ -13,16 +13,14 @@ Authorization
 GET http://localhost:3000/dishes
 
 ### [R]ead one dish
-PUT http://localhost:3000/dishes/6666666
+GET http://localhost:3000/dishes/1
 
 ### [U]pdate dish
-PUT http://localhost:3000/dishes
+PATCH http://localhost:3000/dishes/5
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "🌽❄",
-  "servings": 3
+  "name": "TEST"
 }
 
 ### [D]elete dish
