@@ -25,3 +25,5 @@ Content-Type: application/json
 ### Logout
 GET http://localhost:3000/auth/logout
 
+### Delete
+DELETE http://localhost:3000/auth/delete

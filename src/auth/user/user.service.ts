@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import bcrypt from 'bcryptjs';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -52,5 +53,17 @@ export class UserService {
       ...userToUpdate,
       ...user,
     });
+  }
+
+  async delete(id: number): Promise<{ success: boolean }> {
+    const userToDelete = await this.userRepository.findOne(id);
+    if (!userToDelete) {
+      throw new NotFoundException('User not found');
+    }
+    const { affected } = await this.userRepository.update(id, {
+      email: v4(),
+      password: v4(),
+    });
+    return affected ? { success: true } : { success: false };
   }
 }

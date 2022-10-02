@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -17,11 +18,15 @@ import { User } from '../user/user.entity';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { RefreshAuthGuard } from './refresh.guard';
 import { JwtAuthGuard } from './jwt.guard';
+import { UserService } from '../user/user.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post('register')
   async register(
@@ -75,5 +80,12 @@ export class AuthController {
     return {
       message: 'Logged out',
     };
+  }
+
+  @Delete('delete')
+  @UseGuards(JwtAuthGuard)
+  async delete(@Req() req, @Res({ passthrough: true }) res) {
+    await this.authService.clearAuthTokens(res, req.user.id);
+    return this.userService.delete(req.user.id);
   }
 }
