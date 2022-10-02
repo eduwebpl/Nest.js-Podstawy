@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { UserService } from '../../auth/user/user.service';
@@ -95,9 +95,16 @@ export class DishService {
     return this.getOneById(userId, dishId);
   }
 
-  async delete(userId, dishId: number): Promise<Dish> {
+  async delete(userId, dishId: number): Promise<{ success: boolean }> {
     const dishToRemove = await this.getOneById(userId, dishId);
-    return this.dishRepository.remove(dishToRemove);
+    if (!dishToRemove.id) {
+      throw new NotFoundException('Dish not found');
+    }
+    if (dishToRemove.userId !== userId) {
+      throw new ForbiddenException('You cannot delete this dish');
+    }
+    const { affected } = await this.dishRepository.delete(dishId);
+    return affected ? { success: true } : { success: false };
   }
 
   async generateSlug(name: string) {

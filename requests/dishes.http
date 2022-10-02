@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### [D]elete dish
-DELETE http://localhost:3000/dishes/190
+DELETE http://localhost:3000/dishes/13
 
 
 ### Sample exception
