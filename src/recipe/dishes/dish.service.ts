@@ -18,7 +18,7 @@ export class DishService {
   }
 
   read(): Promise<Dish[]> {
-    return this.dishRepository.find({ relations: ['products'] });
+    return this.dishRepository.find();
   }
 
   async getOneById(id: number): Promise<Dish> {
