@@ -4,6 +4,8 @@ Content-Type: application/json
 
 {
   "name": "My supper Broccoli",
+  "slug": "my-supper-broccoli",
+  "userId": 123555,
   "servings": 1
 }
 

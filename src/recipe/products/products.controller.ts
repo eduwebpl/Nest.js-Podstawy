@@ -22,7 +22,6 @@ export class ProductsController {
 
   @Post()
   createOne(@Body() product: CreateProductDto) {
-    // const dish = this.dishService.getOneById(product.dishId);
     return this.productService.create(product);
   }
 

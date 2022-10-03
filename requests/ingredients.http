@@ -1,0 +1,9 @@
+### [C]reate ingredients
+POST http://localhost:3000/ingredients
+Content-Type: application/json
+
+{
+  "amount": 1,
+  "dishId": 1,
+  "productId": 1
+}
