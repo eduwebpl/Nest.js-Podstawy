@@ -21,16 +21,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { FilterQueryDto } from '../../common/dto/filter-query.dto';
 import { Dish } from './dish.entity';
 import { FilterBy } from '../../common/decorators/filter-by.decorator';
+import { JwtAuthGuard } from '../../auth/auth/jwt.guard';
+import { IngredientService } from '../ingredients/ingredient.service';
 
 @Controller('dishes')
 @UseGuards(AuthGuard('jwt'))
 @UseInterceptors(ClassSerializerInterceptor)
 export class DishesController {
-  private dishService: DishService;
-
-  constructor(dishService: DishService) {
-    this.dishService = dishService;
-  }
+  constructor(
+    private readonly dishService: DishService,
+    private readonly ingredientService: IngredientService,
+  ) {}
 
   @Post()
   createOne(@Req() req, @Body() dish: CreateDishDto) {
@@ -43,17 +44,31 @@ export class DishesController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   readOne(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
-    return this.dishService.getOneById(req.user.id, dishId);
+    return this.dishService.getOneById(dishId, req.user.id);
+  }
+
+  @Get(':id/ingredients')
+  @UseGuards(JwtAuthGuard)
+  readIngredients(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
+    return this.ingredientService.findBy({ dishId }, req.user.id);
   }
 
   @Put()
+  @UseGuards(JwtAuthGuard)
   updateOne(@Req() req, @Body() dish: UpdateDishDto) {
-    return this.dishService.update(req.user.id, dish);
+    return this.dishService.update(dish.id, req.user.id);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   deleteOne(@Req() req, @Param('id', ParseIntPipe) dishId: number) {
-    return this.dishService.delete(req.user.id, dishId);
+    return this.dishService.delete(dishId, req.user.id);
+  }
+
+  @Get('/exception')
+  exampleException() {
+    throw new HttpException('My super sample', HttpStatus.PAYLOAD_TOO_LARGE);
   }
 }

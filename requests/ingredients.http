@@ -8,5 +8,5 @@ Content-Type: application/json
   "productId": 1
 }
 
-### [R]ead ingredient
-GET http://localhost:3000/ingredients/6
+### [R]ead one ingredient
+GET http://localhost:3000/ingredients/1

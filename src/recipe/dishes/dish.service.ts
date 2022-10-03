@@ -58,12 +58,12 @@ export class DishService {
     };
   }
 
-  async getOneById(userId: number, id: number): Promise<Dish> {
+  async getOneById(id: number, userId: number): Promise<Dish> {
     const dish = await this.dishRepository.findOne(id, {
       relations: ['user', 'ingredients', 'ingredients.product'],
       where: [{ userId }, { isPublic: true }],
     });
-    if (!dish) {
+    if (!dish || (dish.isPublic === false && dish.user.id !== userId)) {
       throw new NotFoundException('Dish not found');
     }
     return dish;
@@ -74,8 +74,8 @@ export class DishService {
     return this.dishRepository.update(id, dish);
   }
 
-  async delete(userId, dishId: number): Promise<Dish> {
-    const dishToRemove = await this.getOneById(userId, dishId);
+  async delete(dishId: number, userId: number): Promise<Dish> {
+    const dishToRemove = await this.getOneById(dishId, userId);
     return this.dishRepository.remove(dishToRemove);
   }
 
