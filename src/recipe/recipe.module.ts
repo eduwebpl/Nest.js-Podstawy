@@ -13,11 +13,13 @@ import { IngredientRepository } from './ingredients/ingredient.repository';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Product, Dish, Ingredient, IngredientRepository]),
-    AuthModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Product, Dish, Ingredient]), AuthModule],
   controllers: [DishesController, ProductsController, IngredientsController],
-  providers: [ProductService, DishService, IngredientService],
+  providers: [
+    ProductService,
+    DishService,
+    IngredientService,
+    IngredientRepository,
+  ],
 })
 export class RecipeModule {}

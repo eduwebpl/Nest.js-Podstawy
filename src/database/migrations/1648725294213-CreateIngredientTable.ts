@@ -23,7 +23,6 @@ export class CreateIngredientTable1648725294213 implements MigrationInterface {
           {
             name: 'amount',
             type: 'int',
-            length: '255',
           },
           {
             name: 'productId',
