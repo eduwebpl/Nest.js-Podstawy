@@ -7,10 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "NODE_ENV=production nest build",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "NODE_ENV=production nest start",
-    "start:dev": "NODE_ENV=development nest start --watch",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -19,8 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate": "NODE_ENV=development npx ts-node ./node_modules/typeorm/cli.js migration:run --config src/config/database.config ",
-    "migrate:revert": "NODE_ENV=development npx ts-node ./node_modules/typeorm/cli.js migration:revert --config src/config/database.config ",
+    "migrate": "npx ts-node ./node_modules/typeorm/cli.js migration:run --config src/config/database.config ",
+    "migrate:revert": "npx ts-node ./node_modules/typeorm/cli.js migration:revert --config src/config/database.config ",
     "db:seed": "ts-node  -r esm ./node_modules/typeorm-seeding/dist/cli.js seed -n"
   },
   "dependencies": {
