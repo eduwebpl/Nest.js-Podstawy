@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Like, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 import { UserService } from '../../auth/user/user.service';
