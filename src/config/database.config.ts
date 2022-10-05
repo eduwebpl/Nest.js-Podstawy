@@ -18,10 +18,10 @@ export class TypeOrmConfig {
     return {
       type: 'postgres',
       database: configService.get('DB_NAME'),
-      port: parseInt(process.env.TYPEORM_PORT) || 5432,
+      port: parseInt(configService.get('DB_PORT')) || 5432,
       username: configService.get('DB_USER'),
       password: configService.get('DB_PASSWORD'),
-      host: process.env.DB_HOST || 'localhost',
+      host: configService.get('DB_HOST') || 'localhost',
       synchronize: false,
       migrationsRun: false,
       entities: ['dist/**/*.entity{.ts,.js}'],

@@ -13,8 +13,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.useGlobalFilters(new DatabaseExceptionFilter(configService));
 
-  await app.listen(process.env.PORT);
-  console.log(`My server is running on port ${process.env.PORT}`);
+  const PORT = configService.get('PORT');
+  await app.listen(PORT);
+  console.log(`My server is running on port ${PORT}`);
 }
 
 bootstrap();
