@@ -1,23 +1,26 @@
 import { addExclamationToUserName } from './add-exclamation-to-user-name';
 
-it('should add exclamation to user name', () => {
-  // Arrange:
-  const user = { name: 'Michał' };
+describe('addExclamationToUserName', () => {
+  let user;
 
-  // Act:
-  const endUser = addExclamationToUserName(user);
+  beforeEach(() => {
+    // Arrange:
+    user = { name: 'Michał' };
+  });
 
-  // Assert:
-  expect(endUser.name).toBe('Michał!');
-});
+  it('should add exclamation to user name', () => {
+    // Act:
+    const endUser = addExclamationToUserName(user);
 
-it('should not mutate given object', () => {
-  // Arrange:
-  const user = { name: 'Michał' };
+    // Assert:
+    expect(endUser.name).toBe('Michał!');
+  });
 
-  // Act:
-  const endUser = addExclamationToUserName(user);
+  it('should not mutate given object', () => {
+    // Act:
+    const endUser = addExclamationToUserName(user);
 
-  // Assert:
-  expect(endUser).not.toBe(user);
+    // Assert:
+    expect(endUser).not.toBe(user);
+  });
 });
