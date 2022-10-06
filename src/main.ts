@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { DatabaseExceptionFilter } from './common/filters/database-exception.filter';
 import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import { AppGuard } from './common/guards/app.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -12,6 +13,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.useGlobalPipes(new ValidationPipe());
+
   const configService = app.get(ConfigService);
   app.useGlobalFilters(new DatabaseExceptionFilter(configService));
 

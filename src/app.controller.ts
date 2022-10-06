@@ -6,8 +6,12 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  SetMetadata,
+  UseGuards,
 } from '@nestjs/common';
-import { v4 } from 'uuid';
+import { AppGuard } from './common/guards/app.guard';
+import { Admin } from './common/decorators/admin.decorator';
 
 @Controller()
 export class AppController {
@@ -17,8 +21,10 @@ export class AppController {
   }
 
   @Get('/user')
-  getSample() {
-    return { name: 'Michal' };
+  @Admin()
+  @UseGuards(AppGuard)
+  getSample(@Query('name') name: string) {
+    return { name };
   }
 
   @Post()
