@@ -26,7 +26,7 @@ export class AppController {
 
   @Get('/user')
   getSample(@Query('name') name: string) {
-    throw new CustomException();
+    console.log(`Action!`);
     return { name };
   }
 

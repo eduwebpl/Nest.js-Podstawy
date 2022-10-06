@@ -4,12 +4,14 @@ import { AppModule } from './app.module';
 import { DatabaseExceptionFilter } from './common/filters/database-exception.filter';
 import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import { WrapperInterceptor } from './common/interceptors/wrapper.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: true,
   });
   app.use(cookieParser());
+  app.useGlobalInterceptors(new WrapperInterceptor());
 
   app.useGlobalPipes(new ValidationPipe());
 
