@@ -18,4 +18,15 @@ describe('AppController', () => {
       expect(appController.getHello()).toBe('Hello !');
     });
   });
+
+  describe('createFruit', () => {
+    it('should return proper fruit', () => {
+      // Arrange
+      const fruitDto = { name: 'Apple' };
+      // Act
+      const result = appController.createFruit(fruitDto);
+      // Assert
+      expect(result).toStrictEqual({ fruit: fruitDto });
+    });
+  });
 });

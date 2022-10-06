@@ -23,7 +23,13 @@ export class FilterQueryDto<ENTITY extends BaseEntity> {
   @IsOptional()
   order?: 'ASC' | 'DESC';
 
-  constructor(query, offset, limit, order, orderBy) {
+  constructor(
+    query?: string,
+    offset?: string | number,
+    limit?: string | number,
+    order?: 'ASC' | 'DESC',
+    orderBy?: keyof ENTITY,
+  ) {
     this.query = query;
     this.offset = Number(offset);
     this.limit = Number(limit);
