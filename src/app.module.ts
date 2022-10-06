@@ -7,9 +7,9 @@ import { databaseConfig } from './config/database.config';
 import { envValidationSchema } from './config/envValidation.config';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
-import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { logger } from './common/middlewares/functional-logger.middleware';
+import { HttpFilter } from './common/filters/http.filter';
 
 @Module({
   imports: [
@@ -36,6 +36,10 @@ import { logger } from './common/middlewares/functional-logger.middleware';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpFilter,
     },
   ],
 })
