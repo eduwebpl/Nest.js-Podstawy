@@ -108,18 +108,16 @@ export class DishService {
   }
 
   async generateSlug(name: string) {
-    let slug = slugify(name, {
+    const slug = slugify(name, {
       replacement: '-',
       lower: true,
     });
     const exists = await this.findSlugs(slug);
 
-    if (!exists || exists.length === 0) {
+    if (exists.length === 0) {
       return slug;
     }
-
-    slug = slug + '-' + exists.length;
-    return slug;
+    return `${slug}-${exists.length}`;
   }
 
   private async findSlugs(slug: string): Promise<Dish[]> {
